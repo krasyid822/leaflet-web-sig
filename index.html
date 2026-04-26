@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Kebisingan QGIS ke Leaflet</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  >
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="control-panel">
+      <div class="panel-section">
+        <p class="eyebrow">Leaflet Based</p>
+        <h1>Peta Kebisingan</h1>
+        <p class="panel-copy">
+          Tampilkan titik ukur hasil ekspor QGIS sebagai peta interaktif dengan heatmap.
+          Area tanpa titik pengukuran akan tetap kosong dan ditandai sebagai area yang belum diukur.
+        </p>
+      </div>
+
+      <div class="panel-section">
+        <h2>Data QGIS</h2>
+        <label class="field">
+          <span>GeoJSON titik ukur</span>
+          <input id="measurementFile" type="file" accept=".geojson,.json,application/geo+json,application/json">
+        </label>
+        <p class="field-hint">
+          Gunakan layer titik dengan atribut <code>noise_db</code>.
+        </p>
+
+        <label class="field">
+          <span>GeoJSON batas area (opsional)</span>
+          <input id="boundaryFile" type="file" accept=".geojson,.json,application/geo+json,application/json">
+        </label>
+        <p class="field-hint">
+          Batas area digambar sebagai outline saja agar area kosong tetap terlihat sebagai belum terukur.
+        </p>
+
+        <div class="button-row">
+          <button id="clearMapButton" type="button" class="secondary-button">Bersihkan Layer</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <h2>Tampilan</h2>
+        <label class="toggle">
+          <input id="togglePoints" type="checkbox" checked>
+          <span>Tampilkan titik ukur</span>
+        </label>
+        <label class="toggle">
+          <input id="toggleHeatmap" type="checkbox" checked>
+          <span>Tampilkan heatmap</span>
+        </label>
+        <label class="toggle">
+          <input id="toggleBoundary" type="checkbox" checked>
+          <span>Tampilkan batas area</span>
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <h2>Ringkasan</h2>
+        <dl class="stats-grid">
+          <div>
+            <dt>Titik valid</dt>
+            <dd id="statCount">0</dd>
+          </div>
+          <div>
+            <dt>Minimum</dt>
+            <dd id="statMin">-</dd>
+          </div>
+          <div>
+            <dt>Maksimum</dt>
+            <dd id="statMax">-</dd>
+          </div>
+          <div>
+            <dt>Rata-rata</dt>
+            <dd id="statAvg">-</dd>
+          </div>
+        </dl>
+        <p id="dataStatus" class="status-text">
+          Belum ada data dimuat. Unggah GeoJSON hasil QGIS untuk mulai menampilkan peta.
+        </p>
+      </div>
+
+      <div class="panel-section">
+        <h2>Legenda</h2>
+        <ul class="legend-list">
+          <li><span class="legend-swatch level-high"></span><span>Tinggi (&gt; 75 dBA) - Diukur</span></li>
+          <li><span class="legend-swatch level-medium"></span><span>Sedang (65-75 dBA) - Diukur</span></li>
+          <li><span class="legend-swatch level-low"></span><span>Rendah (&lt; 65 dBA) - Diukur</span></li>
+          <li><span class="legend-swatch level-empty"></span><span>Area kosong - Belum dilakukan pengukuran</span></li>
+        </ul>
+      </div>
+
+      <div class="panel-section">
+        <h2>Catatan</h2>
+        <ul class="note-list">
+          <li>Heatmap hanya dibangun dari titik yang memiliki koordinat dan nilai kebisingan valid.</li>
+          <li>Web ini tidak memberi warna pada area tanpa titik ukur.</li>
+          <li>Ekspor dari QGIS yang paling aman untuk layer titik adalah format GeoJSON.</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="map-panel">
+      <div class="map-toolbar">
+        <span class="toolbar-chip">QGIS</span>
+        <span class="toolbar-chip">GeoJSON</span>
+        <span class="toolbar-chip">Leaflet</span>
+      </div>
+      <div id="map" aria-label="Peta kebisingan interaktif"></div>
+    </main>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
