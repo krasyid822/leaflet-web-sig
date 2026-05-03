@@ -139,19 +139,7 @@ function renderMeasurements(geojson) {
   removeLayer("pointLayer");
   removeLayer("heatLayer");
 
-  const heatData = normalizedPoints.map((item) => [item.lat, item.lng, item.noise]);
-  state.heatLayer = L.heatLayer(heatData, {
-    radius: 32,
-    blur: 24,
-    minOpacity: 0.35,
-    max: 90,
-    gradient: {
-      0.25: "#2f7d32",
-      0.5: "#f39c12",
-      0.72: "#d97706",
-      0.88: "#c0392b"
-    }
-  });
+  state.heatLayer = buildHeatLayer(normalizedPoints);
 
   state.pointLayer = L.geoJSON(
     {
@@ -180,7 +168,7 @@ function renderMeasurements(geojson) {
   refreshStats();
   fitToAvailableBounds();
   updateStatus(
-    `${normalizedPoints.length} titik ukur valid dimuat. Area tanpa titik tetap kosong dan tidak diinterpretasikan sebagai kebisingan rendah.`
+    `${normalizedPoints.length} titik ukur valid dimuat. Area tanpa titik tetap kosong, dan titik bertumpuk tidak lagi menaikkan warna heatmap jika level kebisingannya tetap rendah.`
   );
 }
 
@@ -386,6 +374,32 @@ function pointStyle(noise) {
     fillColor: "#2f7d32",
     fillOpacity: 0.88
   };
+}
+
+function buildHeatLayer(points) {
+  if (!map.getPane('customHeatPane')) {
+    map.createPane('customHeatPane');
+    map.getPane('customHeatPane').style.filter = 'blur(20px)';
+    map.getPane('customHeatPane').style.opacity = '0.75';
+    map.getPane('customHeatPane').style.pointerEvents = 'none';
+  }
+
+  // Urutkan agar nilai kebisingan tertinggi digambar di atas
+  const sortedPoints = points.slice().sort((a, b) => a.noise - b.noise);
+
+  const markers = sortedPoints.map(point => {
+    const style = pointStyle(point.noise);
+    return L.circleMarker([point.lat, point.lng], {
+      radius: 35,
+      stroke: false,
+      fillColor: style.fillColor,
+      fillOpacity: 1,
+      pane: 'customHeatPane',
+      interactive: false
+    });
+  });
+
+  return L.layerGroup(markers);
 }
 
 function formatNoise(value) {

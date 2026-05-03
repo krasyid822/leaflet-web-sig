@@ -101,7 +101,7 @@
       <div class="panel-section">
         <h2>Catatan</h2>
         <ul class="note-list">
-          <li>Heatmap hanya dibangun dari titik yang memiliki koordinat dan nilai kebisingan valid.</li>
+          <li>Heatmap dibangun dari titik dengan koordinat dan nilai kebisingan valid, tanpa membuat titik rendah jadi lebih panas hanya karena bertumpuk.</li>
           <li>Web ini tidak memberi warna pada area tanpa titik ukur.</li>
           <li>Ekspor dari QGIS yang paling aman untuk layer titik adalah format GeoJSON.</li>
         </ul>
@@ -123,7 +123,6 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
