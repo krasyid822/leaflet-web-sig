@@ -33,3 +33,5 @@ Untuk memastikan visualisasi warna 100% akurat dengan nilai aktual data pengukur
 Dengan kombinasi teknik di atas, tepi dari setiap *circle marker* akan memudar dan membaur secara halus satu sama lain membentuk visualisasi yang sangat identik dengan heatmap. 
 
 Yang paling penting: **Titik hijau yang saling bertumpuk ribuan kali pun hanya akan membentuk "awan hijau" yang lebih besar, tanpa pernah merubah warnanya menjadi merah.** Area merah dan oranye hanya akan muncul jika memang ada data aktual yang menyentuh angka kebisingan tersebut.
+
+Dialihkan ke https://github.com/krasyid822/heatmap-peta-kebisingan
